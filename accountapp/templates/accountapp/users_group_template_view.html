@@ -1,0 +1,84 @@
+{% extends 'auth_base.html' %}
+{% load static %}
+
+{% block title%}
+profile
+{% endblock%}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <!-- <h1 class="h3 mb-2 text-gray-800">{{request.user.get_full_name}}</h1> -->
+    <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
+        For more information about DataTables, please visit the <a target="_blank"
+            href="https://datatables.net">official DataTables documentation</a>.</p> -->
+
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">{{user_obj.get_full_name}}'s groups</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <script>
+
+                    var user_id = {{user_obj.id}}
+    
+                    var url = `http://127.0.0.1:8000/api/groups/?user_id=${user_id}`;
+    
+                    $(document).ready(function () {
+                        $('#dataTable').DataTable({
+    
+                            processing: true,
+                            serverSide: true,
+                            start: 0,
+                            length: 4,
+    
+                            columns: [
+    
+                                {
+                                    data: 'name'
+                                },
+                                {
+                                    data: 'creator_name'
+                                },
+                            ],
+    
+                            ajax: {
+                                url: url,
+                            },
+                        });
+                    });
+                </script>
+                
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Creator</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container-fluid -->
+
+{% endblock content %}
+
+{% block script %}
+
+<!-- Page level plugins -->
+<script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+
+ <!-- Page level custom scripts -->
+ <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+{% endblock %}

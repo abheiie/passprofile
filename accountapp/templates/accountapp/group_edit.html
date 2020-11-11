@@ -1,0 +1,44 @@
+{% extends 'auth_base.html' %}
+
+
+{% block content %}
+{% load bootstrap4 %}
+
+<html>
+<br><br>
+
+<head>
+      {# Load CSS and JavaScript #}
+      {% bootstrap_css %}
+      {% bootstrap_javascript jquery='full' %}
+</head>
+
+<body>
+      <div class="container">
+            <h3 class="text-center"> Edit Group </h3>
+            <div class="row">
+                  <div class="col">
+                  </div>
+                  <div class="col">
+                        {% for error in form.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                        {# Display django.contrib.messages as Bootstrap alerts #}
+                        {% bootstrap_messages %}
+                        <form action="{% url 'accountapp:group_edit' group.id %}" method="post">
+                              {% csrf_token %}
+                              {% bootstrap_form form %}
+                              {% buttons %}
+                              <button type="submit" class="btn btn-success btn-block">Update Group</button>
+                              {% endbuttons %}
+                        </form>
+                  </div>
+                  <div class="col">
+                  </div>
+            </div>
+      </div>
+</body>
+
+</html>
+
+{% endblock %}

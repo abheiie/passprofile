@@ -1,0 +1,265 @@
+Vikas Zestminds, [05-Nov-2020 at 4:56:49 PM]:
+{% extends "igs_base.html" %}
+{% block content %}
+<div class="jumbotron text-center">
+    <h1>{{ profile.client_name }}'s Profile</h1>
+</div>
+{% if user.is_authenticated %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class='form-group row'>
+        <div class="col-sm-1">
+            <h2>PROFILE</h2>
+        </div>
+    </div>
+    <div class='form-group row'>
+        <div class="col-sm-1"><label><b>Client ID</b></label></div>
+        <div class="col-sm-1"><label><b>Client Name</b></label></div>
+        <div class="col-sm-1"><label><b>Campaign Name</b></label></div>
+        <div class="col-sm-2"><label><b>Phone Number</b></label></div>
+        <div class="col-sm-1"><label><b>Billable Duration</b></label></div>
+        <div class="col-sm-1"><label><b>Price</b></label></div>
+        <div class="col-sm-1"><label><b>Open Hours</b></label></div>
+        <div class="col-sm-1"><label><b>After Hours</b></label></div>
+        <div class="col-sm-3"><label><b>Billing Cycle</b></label></div>
+    </div>
+    <div class='form-group row'>
+        <div class="col-sm-1"><label>{{ profile.client_id }}</label></div>
+        <div class="col-sm-1"><label>{{ profile.client_name }}</label></div>
+        <div class="col-sm-1"><label>{{ profile.campaign_name }}</label></div>
+        <div class="col-sm-2"><label>{{ profile.tfn_number }}</label></div>
+        <div class="col-sm-1"><label>{{ profile.billable_duration }}</label></div>
+        <div class="col-sm-1"><label>{{ profile.price_per_call }}</label></div>
+        <div class="col-sm-1"><label>{{ profile.open_hrs }}</label></div>
+        <div class="col-sm-1"><label>{{ profile.after_hrs }}</label></div>
+        <div class="col-sm-3"><label>{{ profile.billing_cycle }}</label></div>
+    </div>
+    <br>
+
+    <h6>BILLING CYCLE: {{ profile.billing_cycle }}</h6>
+    <br>
+    <div class='form-group row'>
+        <div class="col-sm-3"><a href="/igs/profile/{{ profile.client_id }}/downloadCSV">Download Call Logs CSV</a>
+        </div>
+        <div class="col-sm-2"><a href="/igs/profile/{{ profile.client_id }}/Call_Logs">Check Call Logs</a></div>
+        <div class="col-sm-2"><a href="/igs/profile/{{ profile.client_id }}/download">Download PDF</a></div>
+
+    </div>
+</form>
+
+<br> <br>
+
+
+<div class="form-row">
+
+    <div class="form-group col-md-2">
+        <select id="date_selector" class="form-control mb-2 mr-sm-2" name="billabledur" placeholder="select">
+            <option value="">Select date upto</option>
+            {% for date in date_list %}
+            <option value={{date}}>{{date}}</option>
+            {%endfor%}
+        </select>
+    </div>
+    <div class="form-group col-md-2">
+        <button type="button" class="btn btn-primary" id="generate_report"> Generate Invoice</button>
+    </div>
+
+    <div class="form-group col-md-3">
+        <button type="button" class="btn btn-primary" id="check_status"> Check status</button>
+    </div>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <div id="invoice_status"></div>
+
+</div>
+<br>
+
+<div class="form-row">
+
+    <div class="form-group col-md-2">
+        <select id="date" class="form-control mb-2 mr-sm-2" name="billabledur2" placeholder="select">
+            <option value="">Select date upto</option>
+            {% for date in date_list %}
+            <option value={{date}}>{{date}}</option>
+            {%endfor%}
+        </select>
+    </div>
+    <div class="form-group col-md-2">
+        <button type="button" class="btn btn-primary" id="generate_csv"> Generate CSV</button>
+    </div>
+
+    <div class="form-group col-md-3">
+        <button type="button" class="btn btn-primary" id="check_csv_status"> Check status</button>
+    </div>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <div id="csv_status"></div>
+
+</div>
+
+<br><br>
+
+<script>
+
+    let last_date = ""
+    $(document).ready(function () {
+
+        let is_secure = {{ is_secure }}
+    
+        let http_string = ""
+
+
+
+        if (is_secure) {
+            http_string = "https"
+
+        } else {
+        http_string = "http"
+        }
+
+        const client_id = {{ profile.client_id }}
+        let base_url = ""
+        base_url = base_url + "{{request.get_host}}"
+
+        let generate_report_url = ${ http_string }://${base_url}/igs/api/generate_report/${client_id}/
+
+        let check_status_url = `${http_string}://${base_url}/igs/api/check_invoice_status/${client_id}/`
+
+        $("#generate_report").click(function (e) {
+
+            const last_date = $("#date_selector").val();
+
+            $("#generate_report").html("Generating Invoice");
+
+            e.preventDefault();
+            $.ajax({
+                type: "GET",
+                url: ${ generate_report_url } ? last_date = ${ last_date },
+
+                success: function (result) {
+                    console.log("sucess", result.task_id)
+                },
+                error: function (result) {
+                    console.log("fail", result.task_id)
+                }
+            });
+        });
+
+
+        $("#check_status").click(function (e) {
+            console.log("njkndsknfdnkfo")
+
+            $("#invoice_status").html("checking status ...");
+            e.preventDefault();
+
+            $.ajax({
+
+                type: "GET",
+                url: check_status_url,
+
+                success: function (result) {
+                console.log(result.invoice_generated_status)
+                if (result.invoice_generated_status == true) {
+                    $("#invoice_status").html(`your invoice was generated on ${result.created_on}, please download with download button`);
+                    $("#generate_report").html(`Generate new invoice`);
+
+                    $("#invoice_status").html(`<a href=${result.download_url} target="_blank">
+                    <button type="button" class="btn btn-warning" id="download_report" target="_blank">Download invoice that was generated on ${result.created_on} </button></a>`)
+                } else {
+                    $("#invoice_status").html("your invoice is not generated yet");
+                }
+            },
+            error: function (result) {
+                alert('error');
+            }
+
+        });
+
+    });
+});
+
+</script>
+
+<script>
+
+    let last_date = ""
+    $(document).ready(function () {
+
+        let is_secure = {{ is_secure }
+    }
+      let http_string = ""
+
+
+
+      if (is_secure) {
+        http_string = "https"
+
+    } else {
+        http_string = "http"
+    }
+
+    const client_id = {{ profile.client_id }}
+    let base_url = ""
+    base_url = base_url + "{{request.get_host}}"
+
+    let generate_report_url = ${ http_string }://${base_url}/igs/api/generate_csv/${client_id}/
+
+        let check_status_url = ${ http_string }://${base_url}/igs/api/check_csv_status/${client_id}/
+
+            $("#generate_csv").click(function (e) {
+
+                const last_date = $("#date").val();
+
+                $("#generate_csv").html("Generating CSV");
+
+                e.preventDefault();
+                $.ajax({
+                    type: "GET",
+                    url: ${ generate_report_url } ? last_date = ${ last_date },
+
+                    success: function (result) {
+                        console.log("sucess", result.task_id)
+                    },
+                    error: function (result) {
+                        console.log("fail", result.task_id)
+                    }
+    });
+});
+
+
+    $("#check_csv_status").click(function (e) {
+        console.log("njkndsknfdnkfo")
+
+        $("#csv_status").html("checking status ...");
+
+        e.preventDefault();
+        $.ajax({
+
+            type: "GET",
+            url: check_status_url,
+
+            success: function (result) {
+                console.log(result.invoice_generated_status)
+                if (result.invoice_generated_status == true) {
+                    $("#csv_status").html(`your invoice was generated on ${result.created_on}, please download with download button`);
+                    $("#generate_csv").html(`Generate new invoice`);
+
+                    $("#csv_status").html(`<a href=${result.download_url} target="_blank">
+                  <button type="button" class="btn btn-warning" id="download_report" target="_blank">Download invoice that was generated on ${result.created_on} </button>
+              </a>`)
+                } else {
+                    $("#csv_status").html("your invoice is not generated yet");
+                }
+            },
+            error: function (result) {
+                alert('error');
+            }
+        });
+    });
+
+
+</script>
+</div>
+</div>
+{% endif %}
+{% endblock %}

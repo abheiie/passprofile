@@ -1,0 +1,44 @@
+{% extends 'auth_base.html' %}
+{% block content %}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <div class="alert alert-success" role="alert">
+                group : {{user_group_object.name}}
+            </div>
+        </div>
+        <div class="col-8">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">username</th>
+                        <th scope="col">Fullname</th>
+                        <th scope="col">Member Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in user_objects%}
+                    <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td>{{user.username}}</td>
+                        <td>{{user.get_full_name}}</td>
+                        {% if user_group_object in user.usergroup_set.all %}
+                        <td><a href="/create_user_to_group_view/{{user_group_object.id}}/{{user.id}}">Remove User</a>
+                        </td>
+                        {% else %}
+                        <td><a href="/create_user_to_group_view/{{user_group_object.id}}/{{user.id}}">Add user</a></td>
+                        {% endif %}
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
