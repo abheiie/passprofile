@@ -149,7 +149,6 @@ def group_edit(request, id=None):
         if form.is_valid():
             form.save()
         else:
-            messages.error(request, form.errors )
             return redirect('/group/edit/'+str(id)+'/')
         return redirect('accountapp:groups_template_view')
     else:
