@@ -677,13 +677,13 @@ def home_view(request):
     no_of_users = User.objects.all().count()
     no_of_groups = UserGroup.objects.all().count()
     no_of_credentials = Credential.objects.all().count()
-    context ={
+    data ={
         "no_of_users": no_of_users,
         "no_of_groups": no_of_groups,
         "no_of_credentials": no_of_credentials
     }
     if user_type in admin_and_manager:
-        return render(request, "accountapp/home.html", context)
+        return render(request, "accountapp/home.html", data)
     else:
         return redirect("accountapp:permission")
 
