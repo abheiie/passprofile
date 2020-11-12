@@ -10,6 +10,9 @@ class UserType(models.Model):
 class User(AbstractUser):
     user_type = models.ForeignKey(UserType, on_delete=models.CASCADE)
     raw_password = models.CharField(max_length=30, null=True, blank=True)
+    # creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_groups", blank=True,null=True)
+
+    
 
 
 class UserGroup(models.Model):
