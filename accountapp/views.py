@@ -684,6 +684,8 @@ def home_view(request):
         "no_of_groups": no_of_groups,
         "no_of_credentials": no_of_credentials,
     }
+
+    print("===========>"*20, data)
     if user_type in admin_and_manager:
         return render(request, "accountapp/home.html", data)
     else:
