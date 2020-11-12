@@ -22,14 +22,15 @@ profile
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary"> Manager - {{user_object.get_full_name}}</h6>
+            <h6 class="m-0 font-weight-bold text-primary">manager- {{user_object.get_full_name}}'s groups</h6>
         </div>
-        <!-- <div class="card-body">
+        <div class="card-body">
             <div class="table-responsive">
                 <script>
-                    user_id = {{user_object.id}}
-                    console.log(user_id)
-                    var url = `http://127.0.0.1:8000/api/credentials/?user_id=${user_id}`;
+
+                    var user_id = {{user_object.id}}
+    
+                    var url = `/api/groups/?user_id=${user_id}`;
     
                     $(document).ready(function () {
                         $('#dataTable').DataTable({
@@ -42,14 +43,11 @@ profile
                             columns: [
     
                                 {
-                                    data: 'product'
+                                    data: 'name'
                                 },
                                 {
-                                    data: 'username'
+                                    data: 'creator_name'
                                 },
-                                {
-                                    data: 'password'
-                                }
                             ],
     
                             ajax: {
@@ -62,14 +60,13 @@ profile
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>Username</th>
-                            <th>Password</th>
+                            <th>Name</th>
+                            <th>Creator</th>
                         </tr>
                     </thead>
                 </table>
             </div>
-        </div> -->
+        </div>
     </div>
 </div>
 <!-- /.container-fluid -->

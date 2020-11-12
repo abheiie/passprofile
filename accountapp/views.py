@@ -36,6 +36,13 @@ class GroupList(APIView):
         except:
             user_id = ""
 
+        try:
+            manager_id = request.GET.get("manager_id")
+        except:
+            manager_id = ""
+
+        
+
         all_groups_object = None
         
         if user_id:
@@ -346,9 +353,11 @@ def user_template_view(request, id):
     if user_type in admin_and_manager:
         user_object = User.objects.get(id = id)
         context = {
-            "user_object":user_object
+            "user_object":user_object,
+            "test":"test-working"
         }
         user_type_profile = user_object.user_type.name
+
         if user_type_profile == "user":
             return render(request, "accountapp/user.html", context)
         elif user_type_profile == "manager":
