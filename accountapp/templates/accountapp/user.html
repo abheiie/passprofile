@@ -29,7 +29,7 @@ profile
                 <script>
                     user_id = {{user_object.id}}
                     console.log(user_id)
-                    var url = `http://127.0.0.1:8000/api/credentials/?user_id=${user_id}`;
+                    var url = `/api/credentials/?user_id=${user_id}`;
     
                     $(document).ready(function () {
                         $('#dataTable').DataTable({

@@ -30,7 +30,7 @@
 
                     var group_id_to_show_user = {{ group_object.id }}
 
-                    var url = `http://127.0.0.1:8000/api/users/?group_id_to_show_user=${group_id_to_show_user}`;
+                    var url = `/api/users/?group_id_to_show_user=${group_id_to_show_user}`;
 
                     $(document).ready(function () {
                         $('#dataTable').DataTable({
