@@ -676,11 +676,14 @@ def home_view(request):
     user_type = request.user.user_type.name
     no_of_users = User.objects.all().count()
     no_of_groups = UserGroup.objects.all().count()
-    no_of_credentials = Credential.objects.all().count()
+    no_of_credentials = Credential.objects.all()
+    no_of_credentials = no_of_credentials.count()
+    
     data ={
         "no_of_users": no_of_users,
         "no_of_groups": no_of_groups,
-        "no_of_credentials": no_of_credentials
+        "no_of_credentials": no_of_credentials,
+        "test":"test_working"
     }
     if user_type in admin_and_manager:
         return render(request, "accountapp/home.html", data)
