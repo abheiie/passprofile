@@ -12,6 +12,22 @@ profile
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
+
+    {% if request.user != user_object %}
+    {% if request.user.user_type.name != "user" %}
+    <a href="/user/make_manager/{{user_object.id}}/" class="btn btn-success btn-icon-split">
+        <span class="icon text-white-50">
+            <i class="fas fa-check"></i>
+        </span>
+        <span class="text">Make Manager</span>
+    </a>
+    <br>
+    <br>
+    {% endif %}
+    {% endif%}
+
+
+
     <!-- Page Heading -->
     <!-- <h1 class="h3 mb-2 text-gray-800">{{request.user.get_full_name}}</h1> -->
     <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
@@ -27,20 +43,20 @@ profile
         <div class="card-body">
             <div class="table-responsive">
                 <script>
-                    user_id = {{user_object.id}}
+                    user_id = {{ user_object.id }}
                     console.log(user_id)
                     var url = `/api/credentials/?user_id=${user_id}`;
-    
+
                     $(document).ready(function () {
                         $('#dataTable').DataTable({
-    
+
                             processing: true,
                             serverSide: true,
                             start: 0,
                             length: 4,
-    
+
                             columns: [
-    
+
                                 {
                                     data: 'product'
                                 },
@@ -51,14 +67,14 @@ profile
                                     data: 'password'
                                 }
                             ],
-    
+
                             ajax: {
                                 url: url,
                             },
                         });
                     });
                 </script>
-                
+
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -82,6 +98,6 @@ profile
 <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
 
- <!-- Page level custom scripts -->
- <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+<!-- Page level custom scripts -->
+<script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 {% endblock %}
