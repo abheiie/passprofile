@@ -6,12 +6,12 @@ profile
 {% endblock%}
 
 {% block style %}
+
 {% endblock %}
 
 {% block content %}
 <!-- Begin Page Content -->
 <div class="container-fluid">
-
 
     {% if request.user != user_object %}
     {% if request.user.user_type.name != "user" %}
@@ -25,6 +25,8 @@ profile
     <br>
     {% endif %}
     {% endif %}
+
+    <h1>hey bro this is abhih</h1>
 
 
 
@@ -42,18 +44,32 @@ profile
         </div>
         <div class="card-body">
             <div class="table-responsive">
+
                 <script>
+                    function setClipboard(value) {
+                        var tempInput = document.createElement("input");
+                        tempInput.style = "position: absolute; left: -1000px; top: -1000px";
+                        tempInput.value = value;
+                        document.body.appendChild(tempInput);
+                        tempInput.select();
+                        document.execCommand("copy");
+                        document.body.removeChild(tempInput);
+                    }
+
+
                     user_id = {{ user_object.id }}
-                    console.log(user_id)
                     var url = `/api/credentials/?user_id=${user_id}`;
 
                     $(document).ready(function () {
+
+
                         $('#dataTable').DataTable({
 
                             processing: true,
                             serverSide: true,
                             start: 0,
                             length: 4,
+
 
                             columns: [
 
@@ -64,8 +80,25 @@ profile
                                     data: 'username'
                                 },
                                 {
-                                    data: 'password'
-                                }
+                                    data: 'password',
+
+                                    
+                                    render: function (data, type, row, meta) {
+                                        var str = data
+                                        var res = str.toString();
+                                        var id = row['id'];
+                                        var other_id = row['id']+"c";
+
+                                        return `
+                                                <a onclick="setClipboard('${res}')" class="btn btn-primary btn-icon-split btn-sm">
+                                                    <span class="text">copy to clipboard</span>
+                                                </a>
+                                                `
+                                            ;
+
+                                        return data;
+                                    },
+                                },
                             ],
 
                             ajax: {
